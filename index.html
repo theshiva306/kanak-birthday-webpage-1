@@ -13,16 +13,20 @@
     /* ============================================================
        VARIABLES
        ============================================================ */
+    #lightbox-nav-prev,
+#lightbox-nav-next {
+  display: none !important;
+}
     :root {
-      --bg-from:      #1a0a1e;
-      --bg-mid:       #2d0f2f;
-      --bg-to:        #1a0e2e;
-      --accent:       #e8789a;
-      --accent2:      #c96dba;
-      --glass:        rgba(255,255,255,0.06);
-      --glass-border: rgba(255,255,255,0.12);
-      --text-main:    #f5e6f0;
-      --text-soft:    #c4a0c8;
+      --bg-from:      #070412;
+      --bg-mid:       #110830;
+      --bg-to:        #0b0520;
+      --accent:       #a855f7;
+      --accent2:      #7c3aed;
+      --glass:        rgba(140,90,255,0.07);
+      --glass-border: rgba(180,140,255,0.14);
+      --text-main:    #f0e8ff;
+      --text-soft:    #b89fd4;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,11 +34,26 @@
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: radial-gradient(ellipse at 30% 20%, var(--bg-mid) 0%, var(--bg-from) 50%, var(--bg-to) 100%);
+      background: radial-gradient(ellipse at 25% 15%, #1a0845 0%, #070412 45%, #0b051a 100%);
       min-height: 100vh;
       color: var(--text-main);
       overflow-x: hidden;
-      /* cursor: default — removed custom cursor */
+    }
+
+    /* Aurora glow — single element, CSS-only, very cheap */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 65% 45% at 15% 25%, rgba(120,40,220,0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 55% 38% at 85% 75%, rgba(80,20,180,0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 60% 10%, rgba(160,60,255,0.07) 0%, transparent 60%);
+      animation: auroraShift 22s ease-in-out infinite alternate;
+    }
+    @keyframes auroraShift {
+      0%   { transform: translate(0,0) scale(1); }
+      50%  { transform: translate(-2%,3%) scale(1.04); }
+      100% { transform: translate(3%,-2%) scale(0.97); }
     }
 
     body::before {
@@ -47,16 +66,17 @@
     /* ── STARFIELD ── */
     #starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
     .star {
-      position: absolute; border-radius: 50%; background: #fff;
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle, #d8b4fe 0%, #fff 60%);
       animation: twinkle ease-in-out infinite;
     }
     @keyframes twinkle {
-      0%,100% { opacity: 0.15; transform: scale(1); }
-      50%      { opacity: 0.8;  transform: scale(1.3); }
+      0%,100% { opacity: 0.12; transform: scale(1); }
+      50%      { opacity: 0.75;  transform: scale(1.3); }
     }
     .shoot {
       position: absolute; height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,0), #fff 50%, rgba(255,255,255,0));
+      background: linear-gradient(90deg, rgba(200,150,255,0), #c084fc 50%, rgba(200,150,255,0));
       animation: shoot linear infinite; opacity: 0;
     }
     @keyframes shoot {
@@ -102,10 +122,15 @@
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       display:flex; align-items:center; justify-content:center;
       margin-bottom:1.4rem;
-      box-shadow: 0 0 24px rgba(232,120,154,0.4);
+      box-shadow: 0 0 28px rgba(168,85,247,0.5);
       transition: transform 0.3s;
+      animation: ringGlow 3s ease-in-out infinite;
     }
-    .lock-ring.open { transform: scale(1.2) rotate(10deg); }
+    @keyframes ringGlow {
+      0%,100% { box-shadow: 0 0 22px rgba(168,85,247,0.4); }
+      50%      { box-shadow: 0 0 40px rgba(168,85,247,0.7), 0 0 70px rgba(124,58,237,0.25); }
+    }
+    .lock-ring.open { transform: scale(1.2) rotate(10deg); animation: none; }
     .lock-ring svg { width:28px; height:28px; color:#fff; }
 
     .lock-title {
@@ -119,9 +144,9 @@
     }
 
     .attempt-badge {
-      font-size: 0.78rem; color: #ff7096;
-      background: rgba(255,112,150,0.12);
-      border: 1px solid rgba(255,112,150,0.25);
+      font-size: 0.78rem; color: #c084fc;
+      background: rgba(168,85,247,0.12);
+      border: 1px solid rgba(168,85,247,0.28);
       border-radius: 20px; padding: 0.25rem 0.8rem;
       margin-bottom: 1rem; opacity:0; transition:opacity 0.3s;
       text-align:center; min-height:1.6em;
@@ -139,7 +164,7 @@
       letter-spacing: 0.06em;
     }
     .lock-input::placeholder { color:rgba(255,255,255,0.25); }
-    .lock-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(232,120,154,0.15); }
+    .lock-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(168,85,247,0.18); }
 
     .eye-btn {
       position:absolute; right:0.9rem; top:50%; transform:translateY(-50%);
@@ -151,7 +176,7 @@
     .eye-btn svg { width:19px; height:19px; }
 
     .error-msg {
-      font-size:0.82rem; color:#ff7096; text-align:center;
+      font-size:0.82rem; color:#c084fc; text-align:center;
       height:1.1em; margin-bottom:0.3rem;
       opacity:0; transform:translateY(-4px);
       transition: opacity 0.3s, transform 0.3s;
@@ -165,10 +190,10 @@
       color:#fff; font-size:1rem; font-weight:600;
       font-family:inherit; cursor:pointer; letter-spacing:0.04em;
       display:flex; align-items:center; justify-content:center; gap:0.5rem;
-      box-shadow: 0 4px 20px rgba(232,120,154,0.3);
+      box-shadow: 0 4px 20px rgba(168,85,247,0.35);
       transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
     }
-    .unlock-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(232,120,154,0.45); filter:brightness(1.06); }
+    .unlock-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(168,85,247,0.55); filter:brightness(1.08); }
     .unlock-btn:active { transform:translateY(0); }
     .unlock-btn svg { width:17px; height:17px; transition:transform 0.2s; }
     .unlock-btn:hover svg { transform:translateX(4px); }
@@ -191,7 +216,7 @@
     #intro-screen.active { display:flex; }
     #intro-screen.hidden { opacity:0; transition:opacity 0.5s; }
     .typewriter-line {
-      font-family:'Playfair Display',serif;
+      font-family:'Playfair Display', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
       font-size:clamp(1.2rem,4vw,2rem);
       color:var(--text-main); text-align:center;
       opacity:0; transition:opacity 0.3s; min-height:1.5em;
@@ -257,10 +282,9 @@
     .game-wrap { text-align:center; max-width:480px; width:100%; display:flex; flex-direction:column; align-items:center; }
     .game-gif {
       width:min(240px,75vw); border-radius:20px;
-      box-shadow:0 6px 30px rgba(232,120,154,0.2),0 2px 10px rgba(0,0,0,0.35);
+      box-shadow:0 6px 30px rgba(168,85,247,0.25),0 2px 10px rgba(0,0,0,0.35);
       margin-bottom:1.8rem;
       animation:imgFloat 4s ease-in-out infinite;
-      will-change: transform;
     }
     @keyframes imgFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
     .game-question {
@@ -274,26 +298,27 @@
     .btn-yes {
       background:linear-gradient(135deg,var(--accent),var(--accent2));
       color:#fff; border:none; border-radius:14px;
-      font-family:'Playfair Display',serif; font-size:1rem;
+      font-family:inherit; font-size:1rem;
       font-weight:700; cursor:pointer; padding:0.7rem 1.8rem;
-      box-shadow:0 4px 18px rgba(232,120,154,0.35);
+      box-shadow:0 4px 18px rgba(168,85,247,0.4);
       transition:transform 0.18s,box-shadow 0.18s,filter 0.18s; white-space:nowrap;
     }
-    .btn-yes:hover { transform:translateY(-3px) scale(1.04); box-shadow:0 8px 28px rgba(232,120,154,0.5); filter:brightness(1.06); }
+    .btn-yes:hover { transform:translateY(-3px) scale(1.04); box-shadow:0 8px 28px rgba(168,85,247,0.6); filter:brightness(1.08); }
     .btn-no {
       background:rgba(255,255,255,0.07); color:var(--text-soft);
       border:1px solid var(--glass-border); border-radius:14px;
-      font-family:inherit; font-size:0.95rem; font-weight:500;
-      cursor:pointer; padding:0.65rem 1.4rem;
+      font-family:inherit; font-size:1rem; font-weight:500;
+      cursor:pointer; padding:0.7rem 1.4rem;
       transition:background 0.2s,color 0.2s; white-space:nowrap;
     }
     .btn-no:hover { background:rgba(255,80,80,0.12); color:#ff7096; }
     .yes-wrap { display:flex; flex-direction:column; align-items:center; }
+    .yes-float-wrap { animation: imgFloat 3.5s ease-in-out infinite; }
     .yes-gif {
       width:min(260px,80vw); border-radius:20px;
-      box-shadow:0 6px 30px rgba(232,120,154,0.25); margin-bottom:1.6rem;
-      animation:imgFloat 3.5s ease-in-out infinite,yesEntrance 0.6s cubic-bezier(0.34,1.2,0.64,1) both;
-      will-change: transform;
+      box-shadow:0 6px 30px rgba(168,85,247,0.3); margin-bottom:1.6rem;
+      animation: yesEntrance 0.6s cubic-bezier(0.34,1.2,0.64,1) both;
+      display: block;
     }
     @keyframes yesEntrance { from{opacity:0;transform:scale(0.85) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
     .yes-msg {
@@ -308,25 +333,32 @@
       opacity:0; animation:hintFade 1s 3s ease forwards;
     }
     @keyframes hintFade { to{opacity:0.6} }
-    .scroll-hint svg { animation:bounceY 1.6s ease-in-out infinite; will-change: transform; }
+    .scroll-hint svg { animation:bounceY 1.6s ease-in-out infinite; }
     @keyframes bounceY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
 
     /* ── SHARED SECTION TITLE ── */
     .section-title {
-      font-family:'Playfair Display',serif;
+      font-family:'Playfair Display', 'Apple Color Emoji', 'Segoe UI Emoji', serif;
       font-size:clamp(1.6rem,5vw,2.4rem); font-weight:700;
       text-align:center; margin-bottom:0.5rem;
+      color: #e8d5ff;
+      animation: titleColorShift 6s ease-in-out infinite alternate;
     }
-    .section-title span { color:var(--accent); font-style:italic; }
+    @keyframes titleColorShift {
+      from { color: #f0e8ff; }
+      to   { color: #c084fc; }
+    }
+    .section-title span { color: var(--accent); font-style: italic; animation: none; }
     .section-sub { color:var(--text-soft); font-size:0.88rem; margin-bottom:2.5rem; text-align:center; font-style:italic; }
 
     /* ── REASONS ── */
     .reasons-box {
       max-width:500px; width:100%;
-      background:var(--glass); border:1px solid var(--glass-border);
+      background: rgba(25, 8, 50, 0.80);
+      border:1px solid var(--glass-border);
       border-radius:24px; padding:2rem 2rem 1.5rem;
       backdrop-filter:blur(16px); text-align:center;
-      box-shadow:0 4px 30px rgba(0,0,0,0.25);
+      box-shadow:0 4px 30px rgba(0,0,0,0.3);
     }
     .reason-number { font-size:0.75rem; color:var(--accent); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.6rem; }
     .reason-text {
@@ -334,7 +366,6 @@
       font-size:clamp(1.1rem,3.5vw,1.5rem); line-height:1.5;
       color:var(--text-main); margin-bottom:1.5rem; min-height:3em;
       transition:opacity 0.3s, transform 0.3s;
-      will-change: opacity, transform;
     }
     .reason-text.fade-out { opacity:0; transform:translateY(-6px); }
     .reason-btn {
@@ -342,10 +373,10 @@
       color:#fff; border:none; border-radius:12px;
       padding:0.65rem 1.8rem; font-family:inherit; font-size:0.9rem;
       font-weight:600; cursor:pointer; letter-spacing:0.03em;
-      box-shadow:0 4px 14px rgba(232,120,154,0.28);
+      box-shadow:0 4px 14px rgba(168,85,247,0.35);
       transition:transform 0.18s,filter 0.18s;
     }
-    .reason-btn:hover { transform:translateY(-2px); filter:brightness(1.07); }
+    .reason-btn:hover { transform:translateY(-2px); filter:brightness(1.1); }
     .reason-done { font-size:0.82rem; color:var(--text-soft); margin-top:0.8rem; min-height:1.2em; }
 
     /* ── GALLERY ── */
@@ -362,11 +393,10 @@
       transition:transform 0.3s, box-shadow 0.3s;
       cursor:pointer;
       animation:polaroidIn 0.5s cubic-bezier(0.34,1.2,0.64,1) both;
-      will-change: transform;
     }
     .polaroid:hover {
       transform:rotate(0deg) scale(1.07) translateY(-5px) !important;
-      box-shadow:0 14px 40px rgba(232,120,154,0.35); z-index:10;
+      box-shadow:0 14px 40px rgba(168,85,247,0.4); z-index:10;
     }
     @keyframes polaroidIn { from{opacity:0;transform:rotate(var(--rot,-2deg)) translateY(24px) scale(0.92)} to{opacity:1} }
     .polaroid img {
@@ -378,7 +408,7 @@
       display:flex; align-items:center; justify-content:center;
       font-size:2rem;
     }
-    .polaroid-label { margin-top:0.5rem; text-align:center; font-size:0.72rem; color:#555; font-style:italic; font-family:'Playfair Display',serif; }
+    .polaroid-label { margin-top:0.5rem; text-align:center; font-size:0.72rem; color:#666; font-style:italic; font-family:'Playfair Display',serif; }
 
     /* ── LIGHTBOX ── */
     #lightbox {
@@ -427,7 +457,7 @@
       border: none; cursor: pointer;
       color: #fff; font-size: 1.1rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 14px rgba(232,120,154,0.45);
+      box-shadow: 0 4px 14px rgba(168,85,247,0.5);
       transition: transform 0.2s, filter 0.2s;
     }
     #lightbox-close:hover { transform: scale(1.15) rotate(10deg); filter: brightness(1.1); }
@@ -444,7 +474,7 @@
     #lightbox-nav-prev { left: 1rem; }
     #lightbox-nav-next { right: 1rem; }
     #lightbox-nav-prev:hover, #lightbox-nav-next:hover {
-      background: rgba(232,120,154,0.18); color: var(--accent); transform: translateY(-50%) scale(1.1);
+      background: rgba(168,85,247,0.2); color: var(--accent); transform: translateY(-50%) scale(1.1);
     }
 
     /* ── COUNTDOWN ── */
@@ -462,6 +492,11 @@
       font-size:2.4rem; font-weight:700; line-height:1;
       background:linear-gradient(135deg,var(--accent),var(--accent2));
       -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      animation: cdGlow 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes cdGlow {
+      from { filter: drop-shadow(0 0 4px rgba(168,85,247,0.4)); }
+      to   { filter: drop-shadow(0 0 12px rgba(168,85,247,0.8)); }
     }
     .cd-label { font-size:0.72rem; color:var(--text-soft); letter-spacing:0.1em; text-transform:uppercase; margin-top:0.3rem; }
 
@@ -484,7 +519,7 @@
       background:var(--glass); border:1px solid var(--glass-border);
       border-radius:28px; padding:2.5rem 2rem;
       max-width:min(90vw,400px); text-align:center;
-      box-shadow:0 8px 50px rgba(232,120,154,0.18);
+      box-shadow:0 8px 50px rgba(168,85,247,0.22);
       animation:cardIn 0.45s cubic-bezier(0.34,1.2,0.64,1) both;
     }
     .egg-emoji { font-size:2.5rem; margin-bottom:1rem; display:block; }
@@ -504,12 +539,11 @@
       font-size: 1.1rem; opacity: 0;
       animation: petalFall linear infinite;
       user-select: none;
-      will-change: transform, opacity;
     }
     @keyframes petalFall {
       0%   { opacity:0; transform: translateY(-40px) rotate(0deg); }
-      10%  { opacity: 0.45; }
-      90%  { opacity: 0.25; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.2; }
       100% { opacity:0; transform: translateY(105vh) rotate(340deg); }
     }
 
@@ -521,12 +555,12 @@
       max-width: 640px; width: 100%;
     }
     .letter-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(30, 10, 55, 0.75);
+      border: 1px solid rgba(180,140,255,0.12);
       border-radius: 20px;
       padding: 2.4rem 2.4rem 2rem;
       backdrop-filter: blur(16px);
-      box-shadow: 0 4px 30px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
       position: relative;
     }
     .letter-card + .letter-card {
@@ -536,7 +570,7 @@
       content: '"';
       position: absolute; top: 1rem; left: 1.6rem;
       font-family: 'Playfair Display', serif;
-      font-size: 4rem; color: var(--accent); opacity: 0.18;
+      font-size: 4rem; color: var(--accent); opacity: 0.15;
       line-height: 1;
     }
     .letter-body {
@@ -554,9 +588,26 @@
       color: var(--accent);
       text-align: right;
     }
+    #proposal-text, #reply-text {
+      max-height: 52vh;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) transparent;
+    }
+    #proposal-text::-webkit-scrollbar, #reply-text::-webkit-scrollbar { width: 4px; }
+    #proposal-text::-webkit-scrollbar-thumb, #reply-text::-webkit-scrollbar-thumb {
+      background: var(--accent); border-radius: 4px;
+    }
+    /* smooth reveal for proposal content */
+    #proposal-content {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    #proposal-content.visible { opacity: 1; }
     .letter-divider {
       width: 60%; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(232,120,154,0.25), transparent);
+      background: linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent);
       margin: 1.4rem auto;
     }
 
@@ -565,12 +616,12 @@
       max-width: 560px; width: 100%;
     }
     .tellme-box {
-      background: var(--glass);
+      background: rgba(25, 8, 50, 0.80);
       border: 1px solid var(--glass-border);
       border-radius: 24px;
       padding: 2rem 2rem 1.8rem;
       backdrop-filter: blur(16px);
-      box-shadow: 0 4px 30px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
     }
     .tellme-textarea {
       width: 100%;
@@ -589,13 +640,13 @@
       margin-bottom: 1rem;
     }
     .tellme-textarea::placeholder { color: rgba(255,255,255,0.22); }
-    .tellme-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,120,154,0.12); }
+    .tellme-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(168,85,247,0.14); }
     .tellme-submit {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff; border: none; border-radius: 12px;
       padding: 0.75rem 2rem; font-family: inherit;
       font-size: 0.95rem; font-weight: 600; cursor: pointer;
-      box-shadow: 0 4px 16px rgba(232,120,154,0.28);
+      box-shadow: 0 4px 16px rgba(168,85,247,0.35);
       transition: transform 0.18s, filter 0.18s;
       display: block; width: 100%;
     }
@@ -661,6 +712,21 @@
       .polaroid { width:130px; }
       #nav-dots { display:none; }
       .letter-card { padding: 1.8rem 1.4rem 1.5rem; }
+      /* kill expensive blur on mobile */
+      .lock-card, .tellme-box, .reasons-box, .letter-card,
+      .cd-box, .egg-card, #lightbox-nav-prev, #lightbox-nav-next {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+      .petal { display: none; }
+      .game-gif, .yes-gif { animation: none; }
+      body::after { animation: none; }
+    }
+
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+      .star, .petal, .game-gif, .yes-gif, .shoot,
+      body::after, .section-title, .cd-num { animation: none; }
     }
   </style>
 </head>
@@ -717,7 +783,7 @@
 
 <!-- 🎵 AUDIO -->
 <audio id="bg-audio" loop preload="auto">
-  <source src="https://files.catbox.moe/w2q4q2.mp3" type="audio/mpeg">
+  <source src="https://limewire.com/d/PDSg3#QeH1xErXMW">
 </audio>
 
 <!-- ============================================================
@@ -731,7 +797,7 @@
     </svg>
     <div style="display:flex;flex-direction:column;gap:1px;">
       <span id="music-label">On</span>
-      <span id="music-song">Tum Hi Ho ♫</span>
+      <span id="music-song"> barqat ♫</span>
     </div>
   </button>
 
@@ -740,13 +806,13 @@
 
   <!-- Nav dots -->
   <div id="nav-dots">
-    <button class="nav-dot active" data-section="0"></button>
-    <button class="nav-dot" data-section="1"></button>
-    <button class="nav-dot" data-section="2"></button>
-    <button class="nav-dot" data-section="3"></button>
-    <button class="nav-dot" data-section="4"></button>
-    <button class="nav-dot" data-section="5"></button>
-    <button class="nav-dot" data-section="6"></button>
+    <button class="nav-dot active" data-section="0" title="Do u love me?"></button>
+    <button class="nav-dot" data-section="1" title="Reasons I love you"></button>
+    <button class="nav-dot" data-section="2" title="Gallery"></button>
+    <button class="nav-dot" data-section="3" title="Countdown"></button>
+    <button class="nav-dot" data-section="4" title="Our Story"></button>
+    <button class="nav-dot" data-section="5" title="Tell me things"></button>
+    <button class="nav-dot" data-section="6" title="—"></button>
   </div>
 
   <!-- ══ SECTION 1: GAME ══ -->
@@ -766,8 +832,10 @@
 
       <div id="yes-screen" style="display:none;">
         <div class="yes-wrap">
-          <img class="yes-gif"
-            src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif" alt="yay" />
+          <div class="yes-float-wrap">
+            <img class="yes-gif"
+              src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif" alt="yay" />
+          </div>
           <p class="yes-msg">awww so sweet 😋<br/>can i eat you? <span>🌸</span></p>
         </div>
       </div>
@@ -815,26 +883,31 @@
   </section>
 
   <!-- ══ SECTION 5: LETTERS ══ -->
-  <section class="section fade-in-section" id="section-4">
-    <h2 class="section-title"><span>Letters</span></h2>
-    <p class="section-sub">written from the heart, just for you</p>
-    <div class="letters-wrap">
-      <div class="letter-card">
-        <p class="letter-body">
-          Hey <em>Kanak</em>,<br><br>
-          I don't know how to put this into words — but here we are, you turning <em>17</em>, and me trying anyway.<br><br>
-          <div class="letter-divider"></div>
-          From that unexpected confession to everything that came after — you became my <em>favourite person</em> without even trying.<br><br>
-          You make ordinary days feel like something worth remembering. Talking to you feels like coming home, and I hope you never forget how <em>loved</em> you are.<br><br>
-          <div class="letter-divider"></div>
-          Happy birthday, <em>jaanu</em>. 🌸<br>
-          May this year be everything you deserve — and more.
-        </p>
-        <p class="letter-sig">— always yours 💕</p>
-      </div>
-      <!-- Add more letter-card blocks here later -->
+ <section class="section fade-in-section" id="section-4">
+  <h2 class="section-title">Our <span>Story</span></h2>
+  <p class="section-sub">tap to reveal something important</p>
+
+  <div class="letters-wrap">
+    <div class="letter-card" id="proposal-card" style="text-align:center; cursor:pointer;">
+      <p class="letter-body">Tap to open 💌</p>
     </div>
-  </section>
+
+    <div id="proposal-content" style="display:none; margin-top:1.5rem;">
+      <button id="proposal-close" class="reason-btn" style="margin-bottom:1rem;">
+  Close ✖
+</button>
+      <div class="letter-card">
+        <p class="letter-body" id="proposal-text"></p>
+        <p class="letter-sig">— me</p>
+      </div>
+
+      <div class="letter-card">
+        <p class="letter-body" id="reply-text"></p>
+        <p class="letter-sig">— her 🌸</p>
+      </div>
+    </div>
+  </div>
+</section>
 
   <!-- ══ SECTION 6: TELL ME ══ -->
   <section class="section fade-in-section" id="section-5">
@@ -851,10 +924,7 @@
         <button class="tellme-submit" id="tellme-submit">Send ✦</button>
         <p class="tellme-confirm" id="tellme-confirm">Got it. 🌸</p>
       </div>
-      <div class="tellme-messages" id="tellme-messages" style="display:none;">
-        <p class="tellme-messages-title">Previous messages</p>
-        <div id="tellme-list"></div>
-      </div>
+      <!-- messages removed — now sent directly to you via email -->
     </div>
   </section>
 
@@ -905,7 +975,7 @@ const _PW = atob("aXJvbmxhZGR1");
 function checkPw(v) { return v === _PW; }
 
 const INTRO_LINE_1 = "Happy Birthday Kanak, you are 17 now 🌸";
-const INTRO_LINE_2 = "who would believe? 🫣";
+const INTRO_LINE_2 = "who would believe? ";
 
 const REASONS = [
   "Because you have my full trust 🌸",
@@ -954,11 +1024,170 @@ const WRONG_ATTEMPT_MSGS = [
   "ok last try… PLEASE 🙏",
 ];
 
+
+  
+  const PROPOSAL_TEXT = `Shiva ~
+
+First of all bhai sorry Bhai Aaj Maine tuje Jayda preshaan krdia . I mean bhut Jayda hi ....
+And now come to the topic
+U said "jb bhi muje propose Krna ho ek lamba sa paragraph likh dio , I will decide then "
+Hn toh that is going to happen today,, yaa ,,, 
+I am going to propose someone for the first time ....
+So take a long deeeeep  breath now u are going on a looooooong session of reading......
+(I will express my self in term of questions,  so that Mai bhut random naa jaau , I will try to stick to the point .) 
+
+What made me think of this ? 
+
+( Bhyiii language ignore krio , and haan mai sayad apni phle waali bandi ke reference du .. for the last time ..) 
+
+We evolve bhai hmara aisa kuch nhi tha ki phli nazar me pyaar hogaya shitt... I think we both had spent a lot of time together.and with that time, we both evolve,the connection between us evolved ..and with that time I realised yaa she is perfect for me .. she knows me .she understands me .. ham hadse Jayda acche dost hai .. to much comfortable with each other , and after that meri expectations aur badhti gyii , probably the expectations someone expects in a relationship ig ... So ofcourse we were living that ..bs ek tag ki kami thi ..aur kaafi baar Mai bilkul edge pr aake maine apne aap ko hold back krlia ...ki what if this didn't last ? What if mai hi future me palat Gaya toh ? Mai itna emotionally unstable hu ,kyu yaar usse aur kru ? Aur pichla experience bhi mera bhut khraab tha ....but last kuch 1 mahine se ,mai apne aap ko yeh bolkr confront kr raha tha ..ki muje kuch frk ni padta , ham dost hi toh hai ,pr ajeeb bhi lagra tha ...ki yeh isse kyu baat kr ri hai 😭😭 ,muje lagra tha yeh muje complete attention ni deri isliye muje bura lagra hai .. but at the end I accepted it was jealousy, ki she is talking with him like how she do with me ....whyyy? Kya woh itna acvha hai ? Nhi kami toh mujme bhi nhi hai ? Bhai mai last 3 din toh padhne bhi baithta hu , padh bhi nhi para 😭😭bhai bs yhi khyaal . Bhai yeh merese pahle jaise baat kyu nhi kr rhi ? Yeh muje ignore krke usse baat kr ri  hogi ikk ? Mai bhi krra baat isse .. bhaad me jaaye .. i dont care .... Aur jaise hi msg aya sb gussa everything gaayb bhai ....mai alg hi kush huu ... Legittt alag hi. .so that I how I realised and accepted yes , I love her 
+
+Ab next question 
+
+Is it really love ? Yaa mai tujko lekr possesive hu bs isliye yeh feelings aari hai ? 
+
+Monday ko mai hdd gusse me thaa ( ek toh mera gussa ,, bhai mjaak mjaak me mai kb serious hojata hu even I don't know , salute to u jo roj jhelti hai ) and toh mai full iss mood me ki .. kon hai kanak? Mai toh jaanta hi nhi hu ... 
+Pr Bhai jb tu saath baithi ..Bhai pet me gudigudi hori thi 😂🤣..Muje accha lagra tha aisa feel Maine kabhi nhi kra tha with u ...
+ and  offcourse muje  baatein toh acchi lag hi Rahi thi ..but mai tuje dekhra tha .muje accha lgra tha tu bolri thi mai bs sunra tha ..idk why ...and mai manme sochra yaar bandi acchi toh hai .mai iske baccho kaa baap banne layak toh hu ... 😂😂
+Maine tuje iss way me dekha nhi tha kabhi ..pr from this point Maine start kra aapko pyaar bhari nazro se dekhna 😋😂...
+Bhai iske baad maine snap login kra ..mai chats scroll kr raha hu alg hi maje aare hai 
+Bhai choti choti baato pr alag hi kush legit 
+Aur choti choti baato pr alag hi gussa .
+Example 
+Tu mujse kl baat krte hue beech me story lgaane chali gyi mai itna Ganda kilsa hu ...
+Mai last 3 se gusse me hi hu 
+Aur kl toh mai ...bss leave ...
+Maine prso raat ko kuch msg bheje the 
+And kl Maine ig khola 12 baje kee .. aur maine msgs unsend krdiye ..fir jb tujse baat Hui ..aur fir tune woh nonijaap shuru krdia aur fir tune bola mai subh usse baat kr ri thi we decideed ki mandir jaayege etc etc this means tune usse phle bhi insta chlaya thaa ..and mere msgs Jo Maine  bheje woh seen ni kre ...mai aur chadd gaya 
+Fir tune woh screen time waali baat ki" itna hai mai tuje dikha nhi skti "..mai aur chidd gaya 
+( Ki yeh itna baat krti hai usse ? ) 
+And mai padhe hue beech me baat kr raha hu aur tu baar baar jaari hai ..aur gussa aya .
+( Ki bs isse bs ek baat boli hai ...woh tk ni maanti ) 
+And then tu yeh bolkr gyi ki mummy bula ri hai 
+That's okay pr jb aake bataya ki mai ghumne chali gyii thii .......I wass likee ...mai kbse wait kr raha hu .... Aur fir raat ko maine bola woh seen wala on Mt krio aur tu 3 baar bol chuki ki ek baar try krunga ek baar .....maii itna gandaaa muh baana kr gaya hu naaa u can't imagine 
+Fir mai chatt pr ghumrra tha kl raat  and I concludeed what happened today aur muje hasi aari hai ..SO YAA WHEN SOMEONE STARTS COMMING IN YOUR THOUGHTS WHOLE DAY ...THAT IS LOVE  baithte uthte ghumne ...that is love .....
+And Aaj din me jb mai tere saath baitha hu I forgetted everything...I was so much in the moment..I was flying from inside.. Bhai tu jb nakahre dikhaati hai naa ... I love mai isse ladu aur maanu ...muje accha lgane laga hai
+So yaa this is love 
+
+Next question -
+
+Kya yeh feelings abhi aayi hai.. acaank?
+
+Nopes
+Yeh sb phle bhi tha ..
+example 
+-Even after talking for hours.The urge to talk more .
+-Choti choti baato kaa bura lagrna 
+-maine sayad aajtk apne emotions ITNE toh    kisi ke saamne ni dikhaaye ...tere saamne apne aap nikal jaate hai ....why?
+-jb arshiya aayi thi beech me . I was like yeh kyu aati hai because mai baith ni pata .so the urge to sit with u and talk and laugh 
+- mood dependence on tujse baat kaise hui hai ..
+-gaane sunte hue acaank kuch sochna aur hasna 
+-and ..even after breakup I didn't feel anything much coz my heart was already there with someone. Kept safely 
+Tooo much broo.. this list kept going.
+
+
+So Abhi tk I have made clear how I started loving you ...
+
+Now I will tell the things I liked about you which ultimately leads to fall in love with you 
+
+
+- Umm ofcourse hairs first ..I seriously want to feel then pr meri futi kismat... Lambe baal woh bhi with  with layer cut is love mai itne me hii flat huu ...
+
+- the rawwness of you - unfiltered jo hai woh hai jisse buri Lage Lage . unfiltered unbiased simple 
+
+- ofcourse smile - apne bando ke saath haste raho poore din aur baakio ko bhaav bhi naa do aur ek hota hai hasna tej tej Tera laugh wasisa nhi hai .hai bhi toh I like that. pr like Smile Jo tu mere ko dekh kr deti hai silent waali ...I can visualise that currently 
+
+-baat baat pr jaanbuj kr yeh soj kr baith jana .ki mai kyu baat kru .yeh krega yeh mnaayega meri galti thodi hai .that soft ego
+
+- muje chat to pasand hai hi usse Jayda jb tu side me baith kr btaati hai ki aaj yeh hua isne yeh kra ..I just oveeeeee that .
+
+-pure expressions and muh bnaake "abeyyy oooo chal " teri yeh waali tone kaa mai fan huu 
+
+- aur teri woh sarcastic waali . "Haaan Haan; sb smjri hu .... Ab kyu krega tu yeh sb " yeh waali tone this is my fav 
+
+- I just like complete you I can write bhut kuch 
+  9 30 hogye hai aur ab I can't wait more ..yeh sb mai tuje ab batata rhunga chill 
+I planned poora grand proposal bhai 
+Pr 5 6 ghante me kya hi hota hai bhai 
+I was even sketich something 
+I was even coading something jb complete hoga tb bhej dunga ....
+
+
+Why you should consider me ~
+
+Dekh maine gym bhi shuru krdia hai . Aur abhi kuch saalo me Ameer bhi hone wala hu heinaa 😂 jokes aside 
+
+Dekh it's all your decision and I will respect it . And haan bs naa yeh soch kr apna decision me lio ki dosti naa khatm hojaaye nhi ..what u want from inside go for that ...
+
+And rahi baat expectations ki I don't have now .bs I want mera koi bhrosa naa tode I am good with that .aur mai aakh band krke bhrosa krta hu .I know u will not ...aur baaki yeh ki ladko se baat nhi Krna yeh nhi Krna ...htt bhaii mjaak se hatke .dost tere bhi hai dost mere bhi pr no one will become resason jisse tuje kuch galat feel ho ..I promise ...muje noni se bhi dikkat nhi hai speaking my heart out ..bs sayad woh jealousy hai uska mai kuch ni kr skta ..
+Jo tune abhi msg kre hai ..noni se baat band no need aisa kuch krne ki jrurat ni hai chill 
+...i believed you , I believe you , I will believe you ....I know u will never lie to me ...I am totally transparent with u and u to be that bss.
+
+Aur haan sayad abhi iss point tk maine juth bole honge kuch pr mark the date 24 July 2025 aaj ke baad aisa kuch nhi hoga 
+Tuje kuch bhi Lage kuch bhi ho u can ask freely...
+ 
+And talking about ashi she is past now .. mai ab kaafi aage aagya hu usse .. bura iss baat ka nhi lgta ki woh mere saath nhi hai .bura iss baat kaa lgta hai ki usne bhrosa toda.
+
+
+And now 
+
+I don't singing and guitar but if I ever could 
+I will sing this song for you 
+
+Listens it completely then proceed further 
+It's each word each line is for you ..
+I repeat EACH WORD EACH LINE 
+just assume
+Perfect song for this situation 
+
+
+
+
+
+Now final proposal finally 
+Knk I am in tears at this point...
+
+Remember I said meri english acchi hori hai kl ? Ab you will get to know why..
+
+( Yeh Maine kl type kra tha I am pasting here poora type maine kra tha .just to look  better 
+Maine isse gpt se format krwa lia .like commnas and fullstop )
+
+So here I go 
+
+I love you, firstly, because I can be myself around you.
+You make me feel so comfortable and safe that I can come out of my shell—be it my childish self, my angry self, or whoever I want to be. Everyone stands with me when I’m at my high, but you… you’ve always been there during my lows, in my hardships.
+
+It’s not easy for me to show my genuine emotions—I usually hide them—but with you, I don’t have to. With you, I can be real.
+I love how every time we’re together, no matter what happens—even after fights—there’s always this unshakable bond between us.
+
+You’ve shown me what true love is. I never received this kind of love and care before, and I only hope that I can make you feel truly loved too. I know I’m not perfect—I make mistakes—but you love me even through my flaws. And I love you for yours.
+To me, you are perfect the way you are.
+You’re the most compassionate, kind-hearted soul I’ve ever met. You can be angry, clumsy, or childish at times, but I love that side of you—it shows me how much you trust me to be your safe space.
+
+The list of reasons I love you could go on forever.
+But the last thing I want to tell you is this:
+Every time I look deep into your eyes, I feel a comfort that whispers… “She is mine, and I am hers.”
+
+So, finally, I just want to ask you, Kanak—
+Meri banogi kya? ❤️`;
+const REPLY_TEXT = `Kanak ~
+
+I want to be honest with you.. These past days, I’ve been going through a lot of feelings—doubts, fears, happiness, and confusion and manymore(bhenchod kyu krta hai yye sbb)..ik i wasn't ready for rln or love kinda thing but when you see someone putting their heart out just for you.. you can't say no.. genuinely..But through all of that, one thing has become clear to me: you are the one I wanted..I needed..
+Jbb para pdhe I was freezed seriously freezed..idk what to reply or what to react..it was more of a shock to me because I have never expected this..tu aisa kuch krega mtlb kbhi nhi kyuki from the beginning ek line maintained thhi and I never wanted to cross that or even think or crossing that..but tu toh bhenchod jis chiz ke liye mana hota hai voh hhi krega so you did..and after reading those para i have millions of doubts, insecurity, fear, and genuinely that stress..the only thing that made me say yes is the TRUST Idk
+
+about love or anything i just know that you are the who can me this girl a lovergirl..
+ I trust you more than anyone else. And now, it’s not just friendship anymore. It’s something deeper, something I can’t ignore anymore—I love you.
+I love the way you listen to me without judgment, the way you respect my space and my pace..I love your patience and the way you’ve stood by me even when I wasn't sure..That means more than words can say.
+
+I may not be perfect at expressing my feelings yet, and I might still need time to say all the things my heart feels.It's actually not easy for me to change emotions so suddenly like dosti se sidha rln it's not ki i don't want it but yk tujhe bhi time lga hoga naa sbb chizo ko
+
+conclude krne me vaise hhi mujhe lgega..i want to be the girl you want..to be the girl you will have expectations with.. now i m ready to give my efforts out for you every second every minute..for you only.. Saying yes to you felt like saying thanks to God for this new and the most beautiful chapter of my life..or haan kanak toh sachme bhot pehle se hhi shiva ki thhi..(the answer of your proposal) ❤️`;
 /* ============================================================
    STARFIELD
    ============================================================ */
 const sf = document.getElementById("starfield");
-for (let i = 0; i < 90; i++) {
+const STAR_COUNT = window.innerWidth < 600 ? 32 : 85;
+for (let i = 0; i < STAR_COUNT; i++) {
   const s = document.createElement("div");
   s.className = "star";
   const sz = Math.random() * 2 + 0.5;
@@ -972,11 +1201,13 @@ for (let i = 0; i < 3; i++) {
   sf.appendChild(sh);
 }
 
+  
 /* ============================================================
    FLOATING PETALS (reduced count for perf)
    ============================================================ */
-const PETALS = ["🌸","💕","✨","💖","🌷"];
-for (let i = 0; i < 8; i++) {
+const PETALS = ["💜","✨","💫","🌸","⭐"];
+const PETAL_COUNT = window.innerWidth < 600 ? 0 : 7;
+for (let i = 0; i < PETAL_COUNT; i++) {
   const p = document.createElement("div");
   p.className = "petal";
   p.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
@@ -1126,7 +1357,9 @@ let noCount = 0;
 yesBtn.addEventListener("click", () => {
   qScreen.style.display  = "none";
   yesScreen.style.display = "block";
-  const colors = ["#e8789a","#c96dba","#f5e6f0","#ffffff","#ff9ebc"];
+  const scrollHint = document.querySelector(".scroll-hint");
+  if (scrollHint) scrollHint.style.display = "none";
+  const colors = ["#a855f7","#7c3aed","#c084fc","#e9d5ff","#ddd6fe"];
   confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 }, colors });
   setTimeout(() => confetti({ particleCount: 50, spread: 110, origin: { y: 0.5 }, colors }), 350);
 });
@@ -1325,36 +1558,55 @@ window.addEventListener("scroll", () => {
 goTop.addEventListener("click", () => window.scrollTo({top:0, behavior:"smooth"}));
 
 /* ============================================================
-   TELL ME / LOCAL STORAGE MESSAGES
+   TELL ME — sends message to your email via Formsubmit
    ============================================================ */
 const tellmeInput   = document.getElementById("tellme-input");
 const tellmeSubmit  = document.getElementById("tellme-submit");
 const tellmeConfirm = document.getElementById("tellme-confirm");
-const tellmeMessages = document.getElementById("tellme-messages");
-const tellmeList    = document.getElementById("tellme-list");
 
-function renderMessages() {
-  let msgs = [];
-  try { msgs = JSON.parse(localStorage.getItem("tellme_msgs") || "[]"); } catch(e) {}
-  if (msgs.length === 0) { tellmeMessages.style.display = "none"; return; }
-  tellmeMessages.style.display = "block";
-  tellmeList.innerHTML = msgs.map(m => `<div class="tellme-msg-item">${m.replace(/</g,"&lt;")}</div>`).reverse().join("");
-}
-
-renderMessages();
-
-tellmeSubmit.addEventListener("click", () => {
+tellmeSubmit.addEventListener("click", async () => {
   const val = tellmeInput.value.trim();
   if (!val) return;
-  let msgs = [];
-  try { msgs = JSON.parse(localStorage.getItem("tellme_msgs") || "[]"); } catch(e) {}
-  msgs.push(val);
-  try { localStorage.setItem("tellme_msgs", JSON.stringify(msgs)); } catch(e) {}
+  tellmeSubmit.disabled = true;
+  tellmeSubmit.textContent = "Sending… 💌";
+  try {
+    await fetch("https://formsubmit.co/ajax/theshiva223@gmail.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        message: val,
+        _subject: "Kanak told you something 💌",
+        _captcha: "false"
+      }),
+    });
+  } catch(e) { /* fail silently — message shown anyway */ }
   tellmeInput.value = "";
+  tellmeSubmit.disabled = false;
+  tellmeSubmit.textContent = "Send ✦";
   tellmeConfirm.classList.add("show");
   setTimeout(() => tellmeConfirm.classList.remove("show"), 2500);
-  renderMessages();
 });
+
+  const proposalCard = document.getElementById("proposal-card");
+const proposalContent = document.getElementById("proposal-content");
+  const proposalClose = document.getElementById("proposal-close");
+
+const proposalTextEl = document.getElementById("proposal-text");
+const replyTextEl = document.getElementById("reply-text");
+
+proposalTextEl.textContent = PROPOSAL_TEXT;
+replyTextEl.textContent = REPLY_TEXT;
+
+proposalCard.addEventListener("click", () => {
+  proposalCard.style.display = "none";
+  proposalContent.style.display = "block";
+  requestAnimationFrame(() => proposalContent.classList.add("visible"));
+});
+  proposalClose.addEventListener("click", () => {
+  proposalContent.classList.remove("visible");
+  setTimeout(() => { proposalContent.style.display = "none"; proposalCard.style.display = "block"; }, 350);
+});
+
 </script>
 </body>
 </html>
